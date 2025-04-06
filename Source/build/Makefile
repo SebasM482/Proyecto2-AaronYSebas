@@ -6,7 +6,7 @@ FAMILY = GW1N-9C
 DEVICE = GW1NR-LV9QN88PC6/I5
 
 #Nombre del proyecto... Acá ponen el nombre que deseen.
-PROYECT = HAMMING
+PROYECT = CALCULADORA
 
 #Fuentes de diseno
 SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv que estan en design
@@ -15,18 +15,18 @@ SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv 
 
 #Fuente de simulacion
 #aca va el testbench que quieran simular
-TESTBENCH = ../sim/top_tb.sv
+TESTBENCH = ../sim/bin_bcdtb.sv
 
 # Constraints para el proyecto
 #aca va el archivo de constraints del proyecto
 CONSTRAINTS = ../constr/Conts-Led-Ports.cst
 
 #el top se indica sin la extension .v, esto hace referencia al nombre que le pusieron al módulo y no al archivo en si.
-TOP_DESIGN =top
-TOP_TB     =top_tb
+TOP_DESIGN =bin_bcd
+TOP_TB     =bin_bcdtb
 
 #nombre del vcd que va a generar el tb
-VCD_FILE = top_tb.vcd
+VCD_FILE = bin_bcdtb.vcd
 
 
 all: synth pnr bitstream load
