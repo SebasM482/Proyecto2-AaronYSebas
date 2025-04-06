@@ -7,10 +7,7 @@ module disp_controller_tb;
     logic [2:0] a;
 
     // Instancia del módulo a probar
-    disp_controller dut (
-        .clk(clk),
-        .a(a)
-    );
+    disp_controller dut (.clk(clk), .a(a));
 
     // Generador de reloj (27 MHz)
     always #18.52 clk = ~clk; // Periodo = 37.04 ns → Half-period = 18.52 ns
