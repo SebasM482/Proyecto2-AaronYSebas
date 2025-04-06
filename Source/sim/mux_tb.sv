@@ -1,57 +1,49 @@
-`timescale 1ns / 1ps
+`timescale 1ns/1ps
 
 module mux_tb;
 
-    // Señales del testbench
-    logic clk_out;          // Señal de reloj de prueba
-    logic [3:0] i;          // Entrada 0
-    logic [3:0] p;          // Entrada 1
-    logic [3:0] w;          // Salida
+    // Entradas al DUT (Device Under Test)
+    logic [2:0] a;
+    logic [11:0] cdu;
 
-    // Instanciar el módulo mux
+    // Salida del DUT
+    logic [3:0] w;
+
+    // Instancia del módulo bajo prueba
     mux uut (
-        .clk_out(clk_out),
-        .i(i),
-        .p(p),
+        .a(a),
+        .cdu(cdu),
         .w(w)
     );
 
-    // Generación de reloj
-    always #100 clk_out = ~clk_out; // Cambia cada 5 ns (frecuencia de 100 MHz aprox.)
-
     initial begin
-        // Inicialización
-        clk_out = 0;
-        i = 4'b0001;
-        p = 4'b1000;
+        $display("Tiempo |   a   |    cdu    |  w");
+        $display("-------------------------------");
 
-        // Prueba 1: clk_out = 0, se espera w = i
-        #100;
-        $display("Tiempo: %t | clk_out = %b | i = %b | e = %b | w = %b", 
-                 $time, clk_out, i, p, w);
-        
-        // Prueba 2: clk_out = 1, se espera w = e
-        #100;
-        $display("Tiempo: %t | clk_out = %b | i = %b | e = %b | w = %b", 
-                 $time, clk_out, i, p, w);
-        
-        #100;
-        $display("Tiempo: %t | clk_out = %b | i = %b | e = %b | w = %b", 
-                 $time, clk_out, i, p, w);
+        // Valores de prueba
+        cdu = 12'b0111_0011_0001; // centenas=0100(4), decenas=0011(3), unidades=0000(0)
 
-        // Prueba 4: Cambiar clk_out de nuevo
-        #100;
-        $display("Tiempo: %t | clk_out = %b | i = %b | e = %b | w = %b", 
-                 $time, clk_out, i, p, w);
+        // Caso 1: Mostrar unidades
+        a = 3'b001;
+        #10;
+        $display("%4dns | %b | %b | %b", $time, a, cdu, w);  // Esperado: w = 0000
 
-        // Terminar simulación
-        #100;
+        // Caso 2: Mostrar decenas
+        a = 3'b010;
+        #10;
+        $display("%4dns | %b | %b | %b", $time, a, cdu, w);  // Esperado: w = 0011
+
+        // Caso 3: Mostrar centenas
+        a = 3'b100;
+        #10;
+        $display("%4dns | %b | %b | %b", $time, a, cdu, w);  // Esperado: w = 0100
+
+        // Caso 4: Estado inválido (no one-hot)
+        a = 3'b000;
+        #10;
+        $display("%4dns | %b | %b | %b", $time, a, cdu, w);  // Esperado: w = 0000
+
         $finish;
     end
 
-        // Generación del archivo VCD
-    initial begin
-        $dumpfile("mux_tb.vcd");
-        $dumpvars(0, mux_tb);
-    end
 endmodule
