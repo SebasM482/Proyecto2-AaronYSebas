@@ -1,18 +1,18 @@
 `timescale 1ns/1ps
-// Este modulo recibe una señal de una frecuencia que se elije, un numero binario que se lee 
-// del dipswitch de 4 pines y recibe el sindrome.
-// Dependiendo del estado de la señal de reloj, el mux selecciona el numero binario o el sindrome.
+// Este mux es controlado por el display controller, el cual indica si se deben mostrar las unidades, decenas o centenas.
+
 
 
 module mux(
-    input logic clk_out,    // Señal de reloj de 1 kHz (selector)
-    input logic [3:0] i,    // Entrada 0 (4 bits)
-    input logic [3:0] p,    // Entrada 1 (4 bits)
-    output logic [3:0] w    // Salida (4 bits)
+    input logic [2:0] a,    // Maquina de estados one-hot
+    input logic [11:0] cdu,    // cdu[3:0] = unidades, cdu[7:4] = decenas, cdu[11:8] = centenas
+    output logic [3:0] w    // Numero de 4 bits (salida)
 );
 
-    always_comb begin
-        w = (clk_out) ? p : i; // Si clk_1kHz = 1 -> p, sino -> i
-    end
+    assign w = (a == 3'b001) ? cdu[3:0] :  // unidades
+               (a == 3'b010) ? cdu[7:4] :  // decenas 
+               (a == 3'b100) ? cdu[11:8] : // centenas
+               4'b0000;
 
+    
 endmodule
