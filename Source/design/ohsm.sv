@@ -2,7 +2,6 @@ module ohsm (
     input wire clk,
     input wire reset,
     input wire start,
-    output reg ValorEstado,
     output reg [3:0] SGlobal //Output del one hot
 );
 
@@ -33,19 +32,19 @@ module ohsm (
             S1: begin //Iniciar en 1
                 if (start)
                 next_state = S2;
-                ValorEstado = 1;
+
             end
             S2: begin //Iniciar 2
                 next_state = S3;
-                ValorEstado = 2;
+
             end
             S3: begin //Iniciar 3
                 next_state = S4;
-                ValorEstado = 3;
+
             end
             S4: begin //Inicar 4
                 next_state = S1;
-                ValorEstado = 4;
+
             end
             default: next_state = S1; //Inicializar en S1
         endcase
