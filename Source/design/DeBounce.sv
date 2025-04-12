@@ -24,14 +24,14 @@
 // Initial Public Release
 // Small Footprint Button Debouncer
 
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ns
 module  DeBounce 
 	(
 	input 			clk, n_reset, button_in,				// inputs
 	output reg 	DB_out										// output
 	);
 //// ---------------- internal constants --------------
-	parameter N = 11 ;		// (2^ (21-1) )/ 38 MHz = 32 ms debounce time
+	parameter N = 11 ;		// (2^ (21-1) )/ 27 MHz = 32 ms debounce time
 ////---------------- internal variables ---------------
 	reg  [N-1 : 0]	q_reg;							// timing regs
 	reg  [N-1 : 0]	q_next;
@@ -45,7 +45,7 @@ module  DeBounce
 	assign  q_add = ~(q_reg[N-1]);			// add to counter when q_reg msb is equal to 0
 	
 //// combo counter to manage q_next	
-	always @ ( q_reset, q_add, q_reg)
+	always @ (q_reset, q_add, q_reg)
 		begin
 			case( {q_reset , q_add})
 				2'b00 :
@@ -73,7 +73,7 @@ module  DeBounce
 					q_reg <= q_next;
 				end
 		end
-	
+	 
 //// counter control
 	always @ ( posedge clk )
 		begin
