@@ -52,20 +52,7 @@ module lecture_tb;
         #40_000_000; // botón pulsado
         filas_raw = 4'b0000;
 
-        // Pulsar fila 2 cuando columnas = 0010
-        #40_000_000;
-        filas_raw = 4'b0100;
-        #40_000_000; // botón pulsado
-        filas_raw = 4'b0000;
-
-        // Pulsar fila 2 cuando columnas = 0010 de nuevo
-        #40_000_000;
-        filas_raw = 4'b0100;
-        #40_000_000; // botón pulsado
-        filas_raw = 4'b0000;
-
-        // Fin de simulación
-        #40_000_000;
+        #10_000_000;
         $finish;
     end
 
