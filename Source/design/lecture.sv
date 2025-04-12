@@ -4,7 +4,7 @@ module lecture (
     input logic clk,
     input logic n_reset,
     input logic [3:0] filas_raw,        // Entradas directas desde las filas del teclado
-    output logic [3:0] sample   // Salidas debouneadas
+    output logic [3:0] sample           // Salidas debouneadas
 );
 
     // Salidas del debouncer 
