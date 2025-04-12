@@ -7,10 +7,10 @@ module ohsm (
 
     
     typedef enum reg [3:0] { //One-hot y su estado respectivo
-        S1 = 4'b1000,
-        S2 = 4'b0100,
-        S3 = 4'b0010, 
-        S4 = 4'b0001
+        S4 = 4'b1000,
+        S3 = 4'b0100,
+        S2 = 4'b0010, 
+        S1 = 4'b0001
     } state_t;
 
     state_t state, next_state;
@@ -39,10 +39,6 @@ module ohsm (
 
             end
             S3: begin //Iniciar 3
-                next_state = S4;
-
-            end
-            S4: begin //Inicar 4
                 next_state = S1;
 
             end

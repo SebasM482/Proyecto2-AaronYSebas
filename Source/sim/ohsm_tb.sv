@@ -7,7 +7,7 @@ module ohsm_tb;
 
     // Variables de salida
 
-    wire [3:0] SGlobal;
+    wire [2:0] SGlobal;
 
     // Instancia del módulo 'ohsm'
     ohsm uut (
@@ -56,11 +56,6 @@ module ohsm_tb;
         start = 0;
 
         #10; // Estado S3
-        start = 1;
-        #10;
-        start = 0;
-
-        #10; // Estado S4
         start = 1;
         #10;
         start = 0;
