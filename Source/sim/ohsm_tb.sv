@@ -6,7 +6,7 @@ module ohsm_tb;
     reg start;
 
     // Variables de salida
-    wire [3:0] ValorEstado;
+
     wire [3:0] SGlobal;
 
     // Instancia del módulo 'ohsm'
@@ -14,7 +14,6 @@ module ohsm_tb;
         .clk(clk),
         .reset(reset),
         .start(start),
-        .ValorEstado(ValorEstado),
         .SGlobal(SGlobal)
     );
 
@@ -46,7 +45,6 @@ module ohsm_tb;
         #10;
 
         // Ciclo de prueba para ver cada uno de los estados
-        $display("Probando transicion de estados:");
         #10;
         start = 1; // Inicia la transición al siguiente estado
         #10;
@@ -73,7 +71,7 @@ module ohsm_tb;
 
     // Monitorización de valores
     initial begin
-        $monitor("Tiempo: %t | ValorEstado: %b | SGlobal: %b", $time, ValorEstado, SGlobal);
+        $monitor("Tiempo: %t | SGlobal: %b", $time, SGlobal);
     end
 
 endmodule
