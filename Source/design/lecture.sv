@@ -106,7 +106,7 @@ module lecture (
 
 
     always @(key_pressed) begin
-        if (key_pressed !== 4'bzzzz) begin
+        if (key_pressed !== 4'b1111) begin
             sample <= key_pressed; // Asignar el valor de key_pressed a sample
         end
     end
