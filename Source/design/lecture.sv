@@ -98,8 +98,8 @@ module lecture (
             8'b1000_0001 : key_pressed = 4'b1101; // columna 0, fila 3 = 13 * D
             8'b0100_0001 : key_pressed = 4'b0000; // columna 1, fila 3 = 0
             8'b0010_0001 : key_pressed = 4'b1110; // columna 2, fila 3 = # 14 E
-            8'b0001_0001 : key_pressed = 4'b1111; // columna 3, fila 3 = 15 F
-            default: key_pressed = 4'bzzzz; // Si no hay coincidencia, salida por defecto
+            //8'b0001_0001 : key_pressed = 4'b1111; // columna 3, fila 3 = 15 F (Tecla D)
+            default: key_pressed = 4'b1111; // Si no hay coincidencia, salida por defecto
 
         endcase
     end
