@@ -10,7 +10,6 @@ module lecture (
 
     // Salidas del debouncer 
     logic [3:0] filas_db; // Muestreo de filas sin rebote
-    logic [3:0] columnas; // Salida de la FSM de columnas
     logic [3:0] columna_presionada0; //4 columna_presionada para un trucazo mistico
     logic [3:0] columna_presionada1;
     logic [3:0] columna_presionada2;
