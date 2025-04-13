@@ -3,24 +3,34 @@
 module top(
     //input logic module_inputs //Recibe los valores de los Pins
     input logic clk,
-    input logic [3:0] i,   // Numero binario
-    input logic [6:0] e,   // Numero binario codificado
+    input logic [3:0] filas_raw, // Entradas directas desde las filas del teclado
     output logic [6:0] d,  // Segmentos
-    output logic [3:0] c,  // Palabra corregida
-    output logic x,        // Control de bjt
-    output logic y);       // Control de bjt
+    output logic [2:0] a, // Control de los segmentos
+    output logic [3:0] columnas, // Salida de la FSM de columnas    
+    );       // Control de bjt
 
     // Declaracion 
     logic [3:0] p;   // Sindrome
     logic [3:0] w;   // Numero binario
-    logic clk_out;   // Reloj 1kHz
     ////////////////////////////
+    // Entradas
+    reg n_reset;
+    initial begin
+        n_reset = 1'b1;
+    end
+
+
 
     // Instaciamiento de los modulos
-    ham_decoder ham (.e(e), .p(p), .c(c));
-    freq_div freq (.clk(clk), .clk_out(clk_out), .x(x), .y(y));
-    mux mux (.clk_out(clk_out), .i(i), .p(p), .w(w));
-    seg_decoder bcd (.w(w), .d(d));
+    disp_dec decoder (.w(sample), .d(d));
+    disp_controller controller (.clk(clk), .a(a));
+    lecture lect (
+        .clk(clk),
+        .n_reset(n_reset),
+        .filas_raw(filas_raw),
+        .columnas(columnas),
+        .sample(sample)
+    );
     ////////////////////////////
 
 endmodule

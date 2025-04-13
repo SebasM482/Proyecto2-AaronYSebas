@@ -35,24 +35,40 @@ module lecture_tb;
         n_reset = 1;
 
         // Esperamos a que columnas empiece (ciclo ~8ms)
-        #40_000_000;
+        #1_000_000;
 
         // Simular pulsación: columna 0 activa y fila 0 en 1 → sample = 0001
         // Nota: esto depende de cómo las columnas cambian en columnas_fsm
         // Esperamos que columnas = 4'b1000 en este momento
-        filas_raw = 4'b0001;
-        #40_000_000; // botón pulsado
+        filas_raw = 4'b1000;
+        #1_000_000; // botón pulsado
         filas_raw = 4'b0000;
 
         // Esperamos a próxima columna
-        #40_000_000;
+        #1_000_000;
+
+        // Pulsar fila 1 cuando columnas = 0100
+        filas_raw = 4'b0100;
+        #1_000_000; // botón pulsado
+        filas_raw = 4'b0000;
+
+        // Esperamos a próxima columna
+        #1_000_000;
 
         // Pulsar fila 1 cuando columnas = 0100
         filas_raw = 4'b0010;
-        #40_000_000; // botón pulsado
+        #1_000_000; // botón pulsado
         filas_raw = 4'b0000;
 
-        #10_000_000;
+        // Esperamos a próxima columna
+        #1_000_000;
+
+        // Pulsar fila 1 cuando columnas = 0100
+        filas_raw = 4'b1000;
+        #1_000_000; // botón pulsado
+        filas_raw = 4'b0000;
+
+        #1_000_000;
         $finish;
     end
 
