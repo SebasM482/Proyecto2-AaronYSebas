@@ -2,7 +2,7 @@ module fsm (
     input  logic clk, 
     input  logic reset,
     input  logic [3:0] sample,
-    output logic [3:0] w
+    output logic [3:0] w1
 );
 
     typedef enum logic [2:0] {S0, S1, S2, S3, S4, S5, S6, S7} statetype;
@@ -17,7 +17,7 @@ module fsm (
         if (reset) begin
             prev_sample <= sample;
             sample_changed <= 0;
-            sum <= 8;d0;
+            sum <= 8'd0;
         end else begin
             sample_changed <= (sample != prev_sample);
             prev_sample <= sample;
@@ -61,11 +61,5 @@ module fsm (
         end
     end
 
-    // Display sum at the end (when FSM reaches S7)
-    always_ff @(posedge clk) begin
-        if (state == S7) begin
-            $display("End of FSM operation: sum = %d", sum); // Display sum after state S7
-        end
-    end
 
 endmodule

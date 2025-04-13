@@ -1,19 +1,19 @@
 `timescale 1ns/1ps
 
-module fsm_tb;
+module sume_tb;
 
     // Testbench signals
     logic clk;
     logic reset;
     logic [3:0] sample;
-    logic [3:0] w;
+    logic [3:0] w1;
 
     // Instantiate the DUT (Device Under Test)
     fsm dut (
         .clk(clk),
         .reset(reset),
         .sample(sample),
-        .w(w)
+        .w1(w1)
     );
 
     // Clock generation: 10 ns period
@@ -59,7 +59,7 @@ module fsm_tb;
     // Monitor signals (Display changes on console)
     initial begin
         $display("Time\tclk\treset\tsample\tw");
-        $monitor("%0t\t%b\t%b\t%04b\t%04b", $time, clk, reset, sample, w);
+        $monitor("%0t\t%b\t%b\t%04b\t%04b", $time, clk, reset, sample, w1);
     end
 
 endmodule
