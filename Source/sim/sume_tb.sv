@@ -1,65 +1,53 @@
-`timescale 1ns/1ps
-
 module sume_tb;
 
-    // Testbench signals
-    logic clk;
-    logic reset;
+    logic clk = 0;
+    logic n_reset;
     logic [3:0] sample;
-    logic [3:0] w1;
+    logic [11:0] sum, w1, w2;
 
-    // Instantiate the DUT (Device Under Test)
-    fsm dut (
+    // Instanciar el módulo
+    sume uut (
         .clk(clk),
-        .reset(reset),
+        .n_reset(n_reset),
         .sample(sample),
-        .w1(w1)
+        .sum(sum),
+        .w1(w1),
+        .w2(w2)
     );
 
-    // Clock generation: 10 ns period
+    // Generador de reloj (10ns periodo)
     always #5 clk = ~clk;
 
-    // Task to change sample and wait
-    task change_sample(input [3:0] new_val);
-        begin
-            sample = new_val;
-            #10;  // wait one clock cycle
-        end
-    endtask
-
-    // Test sequence
     initial begin
-        // Initialize
-        clk = 0;
-        reset = 1;
-        sample = 4'b0000;
-        #12;  // wait for reset to take effect
+        $display("===  ===");
+        $dumpfile("sume_tb.vcd");
+        $dumpvars(0, sume_tb);
 
-        reset = 0;
+        // Reset activado
+        n_reset = 0;
+        sample = 4'd0;
+        #10;
 
-        // Stimulate with sample changes
-        change_sample(4'b0001);  // change sample to 1
-        change_sample(4'b0010);  // change sample to 2
-        change_sample(4'b0011);  // change sample to 3
-        change_sample(4'b0100);  // change sample to 4
-        change_sample(4'b0101);  // change sample to 5
-        change_sample(4'b0110);  // change sample to 6
-        change_sample(4'b0111);  // change sample to 7
-        change_sample(4'b1000);  // change sample to 8
-        change_sample(4'b1001);  // change sample to 9
-        change_sample(4'b1010);  // change sample to 10
+        // Reset desactivado
+        n_reset = 1;
 
-        // Wait for a few clock cycles after the last change
-        #20;
+        // Paso por cada estado solo una vez
+        sample = 4'd0; #10; // S0: w1[11:8]
+        sample = 4'd7; #10; // S1: w1[7:4]
+        sample = 4'd3; #10; // S2: w1[3:0]
+        sample = 4'd2; #10; // S3: w2[11:8]
+        sample = 4'd4; #10; // S4: w2[7:4]
+        sample = 4'd7; #10; // S5: w2[3:0]
+        sample = 4'd0; #10; // S6: calcular suma
 
-        // End the simulation
+        // Mostrar resultado
+        $display("w1 = %0d (0x%03h)", w1, w1);
+        $display("w2 = %0d (0x%03h)", w2, w2);
+        $display("sum = %0d (0x%03h)", sum, sum);
+
+        #10;
+        $display("===  ===");
         $finish;
-    end
-
-    // Monitor signals (Display changes on console)
-    initial begin
-        $display("Time\tclk\treset\tsample\tw");
-        $monitor("%0t\t%b\t%b\t%04b\t%04b", $time, clk, reset, sample, w1);
     end
 
 endmodule

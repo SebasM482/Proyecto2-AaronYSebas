@@ -2,68 +2,65 @@ module sume (
     input  logic clk, //Para encender
     input  logic n_reset, //Reseteo
     input  logic [3:0] sample, //Numero recibido
-    output logic [11:0] sum //Suma de los numeros
+    output logic [11:0] sum, //Suma de los numeros
+    output logic [11:0] w1, //Esto es para la suma
+    output logic [11:0] w2
 );
 
-    typedef enum logic [2:0] {S0, S1, S2, S3, S4, S5, S6} statetype;
-    statetype state, nextstate;
+typedef enum logic [2:0] {S0, S1, S2, S3, S4, S5, S6} statetype; //No se que hace esto, define variables?
+statetype state, nextstate;
 
-    logic [11:0] w1;
-    logic [11:0] w2;
-    logic reset = !n_reset;
-    // Detect when sample changes
-always_ff @(posedge clk or posedge reset) begin
-    if (reset) begin
-        sum <= 12'd0;
-        w1 <= 12'd0;
-        w2 <= 12'd0;
+ //Esto es para la suma
+logic reset = !n_reset; //Tecnisismo, para que los ff funcionen de manera sincronic
+
+always_ff @(posedge clk or posedge reset) begin //Logica de output
+    if (reset) begin //Esto reinicia la calcu
+        sum <= 12'd0; //Reinicio la suma
+        w1 <= 12'd0; //Reinicio el w1
+        w2 <= 12'd0; //reinicio el w2
+        state <= S0;
     end 
+
     else begin
-        case (state)
-            S0: sum <= w1 + w2;
-            S1: w1[11:8] <= sample;
-            S2: w1[7:4]  <= sample;
-            S3: w1[3:0]  <= sample;
-            S4: w2[11:8] <= sample;
-            S5: w2[7:4]  <= sample;
-            S6: w2[3:0]  <= sample;
-            default: ;
+        state <= nextstate;
+        case (state) //Esto determina el output para cada state
+            S0: w1[11:8] <= sample;
+            S1: w1[7:4]  <= sample; //En la 1 se cambian la centenas
+            S2: w1[3:0]  <= sample; //En la 2 las decenas
+            S3: w2[11:8] <= sample; //Unidades
+            S4: w2[7:4]  <= sample; //Centenas para el segundo numero
+            S5: w2[3:0]  <= sample; //Decenas para el segundo numero
+            S6: sum <= w1 + w2; //Unidades para el segundo numero
+            default: ; //Defecto
         endcase
     end
 end
 
-    // State transition logic
-always_comb begin
-        case (state)
+
+always_comb begin //Transicion del profe
+        case (state) //case
             S0: begin
-                state = S1;
-                sum = w1 + w2;
+                nextstate = S1;
             end
             S1: begin
-                state = S2;
-                w1[11:8] = sample;
+                nextstate = S2;
             end
             S2: begin
-                state = S3;
-                w1[7:4] = sample;                    
+                nextstate = S3;                  
             end
             S3: begin
-                state = S4;
-                w1[3:0] = sample;
+                nextstate = S4;
             end
             S4: begin
-                state = S5;
-                w2[11:8] = sample;
+                nextstate = S5;
             end
             S5: begin
-                state = S6;
-                w2[7:4] = sample;
+                nextstate = S6;
             end 
             S6: begin
-                state = S0;
-                w2[3:0] = sample;
+                nextstate = S0;
             end
-            default: state = S0;
+            default: nextstate = S0;
         endcase
 end
 endmodule
