@@ -1,12 +1,15 @@
+`timescale 1ns/1ps
+
 module sume_tb;
 
-    logic clk = 0;
+    // Señales
+    logic clk;
     logic n_reset;
     logic [3:0] sample;
     logic [11:0] sum, w1, w2;
 
-    // Instanciar el módulo
-    sume uut (
+    // Instancia del DUT (Device Under Test)
+    sume dut (
         .clk(clk),
         .n_reset(n_reset),
         .sample(sample),
@@ -15,38 +18,51 @@ module sume_tb;
         .w2(w2)
     );
 
-    // Generador de reloj (10ns periodo)
-    always #5 clk = ~clk;
+    // Generador de reloj con periodo de 37ns
+    initial clk = 0;
+    always #18.5 clk = ~clk;
 
+    // Secuencia de prueba
     initial begin
-        $display("===  ===");
-        $dumpfile("sume_tb.vcd");
-        $dumpvars(0, sume_tb);
-
-        // Reset activado
+        // Inicialización
         n_reset = 0;
         sample = 4'd0;
-        #10;
 
-        // Reset desactivado
+        // Esperar un poco y soltar el reset
+        #20;
         n_reset = 1;
 
-        // Paso por cada estado solo una vez
-        sample = 4'd0; #10; // S0: w1[11:8]
-        sample = 4'd7; #10; // S1: w1[7:4]
-        sample = 4'd3; #10; // S2: w1[3:0]
-        sample = 4'd2; #10; // S3: w2[11:8]
-        sample = 4'd4; #10; // S4: w2[7:4]
-        sample = 4'd7; #10; // S5: w2[3:0]
-        sample = 4'd0; #10; // S6: calcular suma
-
-        // Mostrar resultado
-        $display("w1 = %0d (0x%03h)", w1, w1);
-        $display("w2 = %0d (0x%03h)", w2, w2);
-        $display("sum = %0d (0x%03h)", sum, sum);
-
+        // Esperar un poco más para asegurar transición
         #10;
-        $display("===  ===");
+
+        // En cada ciclo le damos un sample diferente
+        sample = 4'd1; // S0
+        #37;
+
+        sample = 4'd2; // S1
+        #37;
+
+        sample = 4'd3; // S2
+        #37;
+
+        sample = 4'd4; // S3
+        #37;
+
+        sample = 4'd5; // S4
+        #37;
+
+        sample = 4'd6; // S5
+        #37;
+
+        sample = 4'd0; // S6 (trigger suma)
+        #37;
+
+        // Mostrar resultado final
+        $display("W1 = %0d (0x%0h)", w1, w1);
+        $display("W2 = %0d (0x%0h)", w2, w2);
+        $display("SUM = %0d (0x%0h)", sum, sum);
+
+        #20;
         $finish;
     end
 
