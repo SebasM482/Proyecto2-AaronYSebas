@@ -33,7 +33,7 @@ module  DeBounce
 	output logic [3:0] columna_presionada // Columna presionada en el teclado
 	);
 //// ---------------- internal constants --------------
-	parameter N = 20 ;		// (2^ (21-1) ) / 27 MHz = 39 ms debounce time
+	parameter N = 6 ;		// (2^ (21-1) ) / 27 MHz = 39 ms debounce time
 ////---------------- internal variables ---------------
 	reg  [N-1 : 0]	q_reg;			// timing regs
 	reg  [N-1 : 0]	q_next;

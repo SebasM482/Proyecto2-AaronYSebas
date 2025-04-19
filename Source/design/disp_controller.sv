@@ -6,7 +6,7 @@ module disp_controller(
 );
 
     parameter int frequency = 27_000_000;               // Frecuencia de entrada en Hz
-    parameter int max_count = frequency * 8/1000; // Cuenta máxima del contador
+    parameter int max_count = frequency * 1/1000; // Cuenta máxima del contador
 
     logic [24:0] count;  // Contador con tamaño suficiente
    
