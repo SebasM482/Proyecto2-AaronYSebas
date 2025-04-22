@@ -1,12 +1,24 @@
-`timescale 1ns/1ps
-// Este modulo recibe un numero binario de 4 bits retorna 7 bits, uno para cada segmentos del display
-
+`timescale 1ns/1ns
 module disp_dec(input logic [3:0] w, output logic [6:0] d);
-    assign d[6] =  w[1] | w[3] | (~w[2] & ~w[0]) | (w[2] & w[0]);   // a
-    assign d[5] = ~w[2] | w[1] | ~w[0];                            // b
-    assign d[4] = ~w[1] | w[2] | w[0];                             // c
-    assign d[3] = (~w[2] & ~w[0]) | (~w[2] & w[1]) + (w[1] & ~w[0]) | (w[2] & ~w[1] & w[0]);  // d
-    assign d[2] = (~w[2] & ~w[0]) | (w[1] & ~w[0]);                // e
-    assign d[1] = w[3] | (~w[1] & ~w[0]) | (w[2] & ~w[1]);         // f
-    assign d[0] = w[3] | (~w[2] & w[1]) | (w[2] & ~w[0]) | (w[2] & ~w[1]);  // g
+    always_comb begin
+        case (w)
+            4'h0: d <= 7'b1111110;
+            4'h1: d <= 7'b0110000;
+            4'h2: d <= 7'b1101101;
+            4'h3: d <= 7'b1111001;
+            4'h4: d <= 7'b0110011;
+            4'h5: d <= 7'b1011011;
+            4'h6: d <= 7'b1011111;
+            4'h7: d <= 7'b1110000;
+            4'h8: d <= 7'b1111111;
+            4'h9: d <= 7'b1111011;
+            4'hA: d <= 7'b1110111;
+            4'hB: d <= 7'b0011111;
+            4'hC: d <= 7'b1001110;
+            4'hD: d <= 7'b0111101;
+            4'hE: d <= 7'b1001111;
+            4'hF: d <= 7'b1000111;
+            default: d <= 7'b0000000;
+        endcase
+    end
 endmodule
