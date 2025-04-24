@@ -5,8 +5,7 @@ module lecture (
     input logic n_reset,
     input logic [3:0] filas_raw,        // Entradas directas desde las filas del teclado
     output logic [3:0] columnas,
-    output logic [3:0] sample,           // Salidas debouneadas
-    output logic [3:0] key_pressed,         // Muestreo de filas sin rebote
+    output logic [3:0] sample           // Salidas debouneadas---// Muestreo de filas sin rebote
 );
 
     // Salidas del debouncer 
@@ -111,7 +110,6 @@ module lecture (
             sample <= key_pressed;
         end
     end
-end
 endmodule
  
 
