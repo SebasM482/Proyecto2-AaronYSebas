@@ -2,7 +2,7 @@ module sume (
     input  logic clk, //Para encender
     input  logic n_reset, //Reseteo
     input  logic [3:0] sample, //Numero recibido
-    output logic [11:0] sum, //Suma de los numeros
+    output logic [11:0] cdu, //Suma de los numeros
     output logic [11:0] w1, //Esto es para la suma
     output logic [11:0] w2
 );
@@ -15,7 +15,7 @@ logic reset = !n_reset; //Tecnisismo, para que los ff funcionen de manera sincro
 
 always_ff @(posedge clk or posedge reset) begin //Logica de output
     if (reset) begin //Esto reinicia la calcu
-        sum <= 12'd0; //Reinicio la suma
+        cdu <= 12'd0; //Reinicio la suma
         w1 <= 12'd0; //Reinicio el w1
         w2 <= 12'd0; //reinicio el w2
         state <= S0;
@@ -30,7 +30,7 @@ always_ff @(posedge clk or posedge reset) begin //Logica de output
             S3: w2[11:8] <= sample; //Unidades
             S4: w2[7:4]  <= sample; //Centenas para el segundo numero
             S5: w2[3:0]  <= sample; //Decenas para el segundo numero
-            S6: sum <= w1 + w2; //Unidades para el segundo numero
+            S6: cdu <= w1 + w2; //Unidades para el segundo numero
             default: ; //Defecto
         endcase
     end

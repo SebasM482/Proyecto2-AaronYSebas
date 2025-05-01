@@ -6,14 +6,14 @@ module sume_tb;
     logic clk;
     logic n_reset;
     logic [3:0] sample;
-    logic [11:0] sum, w1, w2;
+    logic [11:0] cdu, w1, w2;
 
     // Instancia del DUT (Device Under Test)
     sume dut (
         .clk(clk),
         .n_reset(n_reset),
         .sample(sample),
-        .sum(sum),
+        .cdu(cdu),
         .w1(w1),
         .w2(w2)
     );
@@ -60,7 +60,7 @@ module sume_tb;
         // Mostrar resultado final
         $display("W1 = %0d (0x%0h)", w1, w1);
         $display("W2 = %0d (0x%0h)", w2, w2);
-        $display("SUM = %0d (0x%0h)", sum, sum);
+        $display("SUM = %0d (0x%0h)", cdu, cdu);
 
         #20;
         $finish;
