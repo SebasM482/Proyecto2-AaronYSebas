@@ -11,7 +11,8 @@ module top(
     );      
 
     logic [3:0] leds;
-    assign columna_presionada_total = ~leds;
+    logic [3:0] sample; // Salidas debouneadas
+    assign columna_presionada_total = leds;
     ////////////////////////////
     // Entradas
     reg n_reset;

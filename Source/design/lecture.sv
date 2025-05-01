@@ -6,24 +6,23 @@ module lecture (
     input logic [3:0] filas_raw,        // Entradas directas desde las filas del teclado
     output logic [3:0] columnas,
     output logic [3:0] sample,           // Salidas debouneadas
-    output logic [3:0] key_pressed,         // Muestreo de filas sin rebote
+    output logic [3:0] key_pressed         // Muestreo de filas sin rebote
 );
 
     // Salidas del debouncer 
-    logic [3:0] filas_db; // Muestreo de filas sin rebote
     logic [3:0] columna_presionada0; //4 columna_presionada para un trucazo mistico
     logic [3:0] columna_presionada1;
     logic [3:0] columna_presionada2;
     logic [3:0] columna_presionada3;
     logic [3:0] columna_presionada_total;
-    logic [3:0] key_pressed; // Salida del teclado (4 bits)
+    logic [3:0] filas_db; // Muestreo de filas sin rebote
+
 
 
     columnas_fsm fsm (
         .clk(clk),
         .columnas(columnas)
     );
-
 
     DeBounce db0 (
         .clk(clk),
@@ -61,26 +60,14 @@ module lecture (
         .columna_presionada(columna_presionada3)
     );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  
-    assign columna_presionada_total = columna_presionada0 | columna_presionada1 | columna_presionada2 | columna_presionada3;
+    logic [7:0] code; // Código de 8 bits para identificar la tecla presionada
+    assign columna_presionada_total = columna_presionada0 | columna_presionada1 | columna_presionada2 | columna_presionada3; // Unir las columnas presionadas
+    assign code = {columna_presionada_total, filas_db};
 
-    always @(posedge clk) begin
-        case({columna_presionada_total, filas_db})
+    always @(posedge clk ) begin
+        
+        case(code)
             8'b1000_1000 : key_pressed <= 4'b0001; // columna 0, fila 0 = 1
             8'b0100_1000 : key_pressed <= 4'b0010; // columna 1, fila 0 = 2
             8'b0010_1000 : key_pressed <= 4'b0011; // columna 2, fila 0 = 3
@@ -97,7 +84,7 @@ module lecture (
             8'b0001_0010 : key_pressed <= 4'b1100; // columna 3, fila 2 = 12 C
 
             8'b1000_0001 : key_pressed <= 4'b1101; // columna 0, fila 3 = 13 * D
-            8'b0100_0001 : key_pressed <= 4'b0100; // columna 1, fila 3 = 0
+            8'b0100_0001 : key_pressed <= 4'b0000; // columna 1, fila 3 = 0
             8'b0010_0001 : key_pressed <= 4'b1110; // columna 2, fila 3 = # 14 E
             //8'b0001_0001 : key_pressed = 4'b1111; // columna 3, fila 3 = 15 F (Tecla D)
             default: key_pressed <= 4'b1111; // Si no hay coincidencia, salida por defecto
@@ -106,29 +93,38 @@ module lecture (
     end
 
 
-    always @(posedge clk) begin
-        if (key_pressed !== 4'b1111) begin
+    always @(posedge clk ) begin
+        if (key_pressed !== 4'b1111)
             sample <= key_pressed;
-        end
     end
+
 
 endmodule
  
 
 
+
+
+
+
+
+
+
+ 
+
+
 module columnas_fsm(
-    input logic clk,
+    input  logic clk,
     output logic [3:0] columnas
 );
-    parameter int frequency = 27_000_000;               // Frecuencia de entrada en Hz
-    parameter int max_count = frequency * 1/1000; // Cuenta máxima del contador 
+    parameter int N = 19; // Bits del contador → controla el tiempo de espera (2^N ciclos)
+    logic [N-1:0] count = 19'd0;
 
-    logic [24:0] count;  // Contador con tamaño suficiente
-
-    // Bloque secuencial
     always_ff @(posedge clk) begin
-        if (count == max_count - 1) begin
-            // Cambia el estado de los segmentos en secuencia cíclica
+        if (count[N-1]) begin //19'011111111111111111111
+            count <= '0; // Reiniciar contador al cambiar de estado
+
+            // Cambiar de columna
             case (columnas)
                 4'b1000: columnas <= 4'b0100;
                 4'b0100: columnas <= 4'b0010;
@@ -136,18 +132,8 @@ module columnas_fsm(
                 4'b0001: columnas <= 4'b1000;
                 default: columnas <= 4'b1000;
             endcase
-            count <= 0;
-        end 
-        else begin
+        end else begin
             count <= count + 1;
         end
     end
-
-    // Inicialización adecuada en reset
-    initial begin
-        count <= 0;
-        columnas <= 4'b0100; // Estado inicial del contador
-    end
-
-
 endmodule
