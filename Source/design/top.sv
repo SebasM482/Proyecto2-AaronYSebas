@@ -23,8 +23,9 @@ module top(
 
 
     // Instaciamiento de los modulos
-    disp_dec decoder (.w(sample), .d(d));
+    disp_dec decoder (.w(cdu), .d(d));
     disp_controller controller (.clk(clk), .a(a));
+    sume suma (.sample(sample), .cdu(cdu));
     lecture lect (
         .clk(clk),
         .n_reset(n_reset),
