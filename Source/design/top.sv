@@ -25,7 +25,12 @@ module top(
     // Instaciamiento de los modulos
     disp_dec decoder (.w(cdu), .d(d));
     disp_controller controller (.clk(clk), .a(a));
-    sume suma (.sample(sample), .cdu(cdu));
+    sume suma (
+    .clk(clk),             // Clock signal from top-level module
+    .n_reset(n_reset),     // Reset signal from top-level module
+    .sample(sample),       // Sample input, passed from another module
+    .cdu(cdu)              // Output of the sum
+);
     lecture lect (
         .clk(clk),
         .n_reset(n_reset),
