@@ -12,6 +12,7 @@ module top(
 
     logic [3:0] leds;
     logic [3:0] sample; // Salidas debouneadas
+    logic [11:0] cdu;
     assign columna_presionada_total = leds;
     ////////////////////////////
     // Entradas
@@ -25,11 +26,12 @@ module top(
     // Instaciamiento de los modulos
     disp_dec decoder (.w(cdu), .d(d));
     disp_controller controller (.clk(clk), .a(a));
+    mux mux (.a(a), .cdu(cdu), .w(w));
     sume suma (
-    .clk(clk),             // Clock signal from top-level module
-    .n_reset(n_reset),     // Reset signal from top-level module
-    .sample(sample),       // Sample input, passed from another module
-    .cdu(cdu)              // Output of the sum
+    .clk(clk),             
+    .n_reset(n_reset),    
+    .sample(sample),       
+    .cdu(cdu)              
 );
     lecture lect (
         .clk(clk),
