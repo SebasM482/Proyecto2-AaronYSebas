@@ -1,69 +1,51 @@
-`timescale 1ns/1ps
-
 module sume_tb;
 
-    // Señales
+    // Inputs
     logic clk;
     logic n_reset;
     logic [3:0] sample;
-    logic [11:0] cdu, w1, w2;
 
-    // Instancia del DUT (Device Under Test)
-    sume dut (
+    // Outputs
+    logic [11:0] cdu;
+
+    // Instantiate the Unit Under Test (UUT)
+    sume uut (
         .clk(clk),
         .n_reset(n_reset),
         .sample(sample),
-        .cdu(cdu),
-        .w1(w1),
-        .w2(w2)
+        .cdu(cdu)
     );
 
-    // Generador de reloj con periodo de 37ns
-    initial clk = 0;
-    always #18.5 clk = ~clk;
+    // Clock generation
+    always begin
+        #5 clk = ~clk;  // Toggle clock every 5 time units
+    end
 
-    // Secuencia de prueba
+    // Stimulus block
     initial begin
-        // Inicialización
-        n_reset = 0;
-        sample = 4'd0;
+        // Initialize signals
+        clk = 0;
+        n_reset = 0;     // Reset the design initially
+        sample = 4'b1111; // No sample initially
 
-        // Esperar un poco y soltar el reset
-        #20;
-        n_reset = 1;
+        // Apply reset
+        #10 n_reset = 1; // Release reset after 10 time units
 
-        // Esperar un poco más para asegurar transición
-        #10;
+        // Start sending values to `sample`
+        #10 sample = 4'b0101; // First input for w1[11:8]
+        #10 sample = 4'b0011; // First input for w1[7:4]
+        #10 sample = 4'b0100; // First input for w1[3:0]
+        #10 sample = 4'b1001; // Second input for w2[11:8]
+        #10 sample = 4'b0110; // Second input for w2[7:4]
+        #10 sample = 4'b0001; // Second input for w2[3:0]
+        
+        // Finish the simulation after a few more cycles
+        #10 $finish;
+    end
 
-        // En cada ciclo le damos un sample diferente
-        sample = 4'd1; // S0
-        #37;
-
-        sample = 4'd2; // S1
-        #37;
-
-        sample = 4'd3; // S2
-        #37;
-
-        sample = 4'd4; // S3
-        #37;
-
-        sample = 4'd5; // S4
-        #37;
-
-        sample = 4'd6; // S5
-        #37;
-
-        sample = 4'd0; // S6 (trigger suma)
-        #37;
-
-        // Mostrar resultado final
-        $display("W1 = %0d (0x%0h)", w1, w1);
-        $display("W2 = %0d (0x%0h)", w2, w2);
-        $display("SUM = %0d (0x%0h)", cdu, cdu);
-
-        #20;
-        $finish;
+    // Monitor output for debugging
+    initial begin
+        $monitor("At time %t, sample = %b, cdu = %b", $time, sample, cdu);
     end
 
 endmodule
