@@ -1,62 +1,48 @@
 module sume (
     input  logic clk,
-    input  logic n_reset,
-    input  logic [3:0] sample,  // Este es el valor del teclado
+    input  logic [3:0] sample_input,  // Valor del teclado
     output logic [11:0] cdu           // Resultado de la suma
 );
 
     typedef enum logic [2:0] {S0, S1, S2, S3, S4, S5, S6} statetype;
-    statetype state, nextstate;
+    statetype state=S0;  // Iniciar directamente en S6
 
     // Variables internas
     logic [11:0] w1, w2;
-    logic [3:0] sample_prev;
-    logic sample_changed;
+    logic [3:0] sample, sample_prev;
+    logic sample_changed, flag;
 
-    // Detectar cambio en sample
-    assign sample_changed = (sample != sample_prev) && (sample != 4'b1111);
-
-    // Lógica secuencial
-    always_ff @(posedge clk or negedge n_reset) begin
-        if (!n_reset) begin
-            // Inicialización en caso de reset
-            cdu   <= 12'd0;
-            w1    <= 12'd0;
-            w2    <= 12'd0;
-            state <= S0;
-            sample_prev <= 4'b1111;
-        end else begin
-            // Actualizamos sample_prev con el valor de sample
-            sample_prev <= sample;
-            if (sample_changed) begin
-                case (state)
-                    S0: w1[11:8] <= sample;  // Centena del primer número
-                    S1: w1[7:4]  <= sample;  // Decena
-                    S2: w1[3:0]  <= sample;  // Unidad
-                    S3: w2[11:8] <= sample;  // Centena del segundo número
-                    S4: w2[7:4]  <= sample;  // Decena
-                    S5: w2[3:0]  <= sample;  // Unidad
-                    S6: cdu      <= w1 + w2; // Suma
-                endcase
-                state <= nextstate;
-            end
-        end
+    // Registro de sample y detección de cambio
+    always_ff @(posedge clk) begin
+        sample_prev <= sample;
+        sample      <= sample_input;
     end
 
-    // Lógica del siguiente estado
-    always_ff @(posedge clk or negedge n_reset) begin
-        if (!n_reset) begin
-            nextstate <= S0;  // Inicialización del siguiente estado
-        end else begin
+    assign sample_changed = (sample != sample_prev);
+
+    // Máquina de estados
+    always_ff @(posedge clk) begin
+        if (sample_changed || flag) begin
             case (state)
-                S0: nextstate = S1;
-                S1: nextstate = S2;
-                S2: nextstate = S3;
-                S3: nextstate = S4;
-                S4: nextstate = S5;
-                S5: nextstate = S6;
-                S6: nextstate = S0;
-                default: nextstate = S0;
+                S0: w1[11:8] <= sample;
+                S1: w1[7:4]  <= sample;
+                S2: w1[3:0]  <= sample;
+                S3: w2[11:8] <= sample;
+                S4: w2[7:4]  <= sample;
+                S5: w2[3:0] <= sample;  // Asignar el valor de sample a w2[3:0]
+                S6: cdu <= w1 + w2;  // Sumar w1 y w2 y asignar a cdu
+            endcase
+
+            // Avanzar al siguiente estado
+            case (state)
+                S0: state <= S1;
+                S1: state <= S2;
+                S2: state <= S3;
+                S3: state <= S4;
+                S4: state <= S5;
+                S5: state <= S6;
+                S6: state <= S0; 
+                default: state <= S0;  // ← Aquí cambiamos a S6 como estado por defecto
             endcase
         end
     end

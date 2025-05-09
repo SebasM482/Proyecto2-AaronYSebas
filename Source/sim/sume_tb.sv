@@ -1,51 +1,74 @@
+`timescale 1ns / 1ns
+
 module sume_tb;
 
-    // Inputs
     logic clk;
-    logic n_reset;
     logic [3:0] sample;
-
-    // Outputs
     logic [11:0] cdu;
 
-    // Instantiate the Unit Under Test (UUT)
+    // Instancia del DUT (Device Under Test)
     sume uut (
         .clk(clk),
-        .n_reset(n_reset),
-        .sample(sample),
+        .sample_input(sample),
         .cdu(cdu)
     );
 
-    // Clock generation
-    always begin
-        #5 clk = ~clk;  // Toggle clock every 5 time units
-    end
+    // Reloj: periodo de 10 unidades de tiempo
+    always #18.5 clk = ~clk;
 
-    // Stimulus block
     initial begin
-        // Initialize signals
+        // Inicializar señales
         clk = 0;
-        n_reset = 0;     // Reset the design initially
-        sample = 4'b1111; // No sample initially
+        sample = 4'b1111; // Sin tecla presionada inicialmente
 
-        // Apply reset
-        #10 n_reset = 1; // Release reset after 10 time units
+        // Esperar un ciclo
+        #1000;
 
-        // Start sending values to `sample`
-        #10 sample = 4'b0101; // First input for w1[11:8]
-        #10 sample = 4'b0011; // First input for w1[7:4]
-        #10 sample = 4'b0100; // First input for w1[3:0]
-        #10 sample = 4'b1001; // Second input for w2[11:8]
-        #10 sample = 4'b0110; // Second input for w2[7:4]
-        #10 sample = 4'b0001; // Second input for w2[3:0]
-        
-        // Finish the simulation after a few more cycles
-        #10 $finish;
+        // Simular presiones de teclas
+        sample = 4'b0001; // w1[11:8] = 5
+        #1000;
+        sample = 4'b0010; // w1[7:4] = 3
+        #1000;
+        sample = 4'b0011; // w1[3:0] = 4
+        #1000;
+        sample = 4'b0001; // w2[11:8] = 9
+        #1000;
+        sample = 4'b0010; // w2[7:4] = 6
+        #1000;
+        sample = 4'b0011; // w2[3:0] = 1
+        #1000;
+
+
+        sample = 4'b1111; // Sin tecla presionada (para evitar cambios en el estado)
+        // Esperar un ciclo extra para ver el resultado de la suma
+        #5000;
+
+        // Simular presiones de teclas
+        sample = 4'b0011; // w1[11:8] = 5
+        #1000;
+        sample = 4'b0010; // w1[7:4] = 3
+        #1000;
+        sample = 4'b0001; // w1[3:0] = 4
+        #1000;
+        sample = 4'b0011; // w2[11:8] = 9
+        #1000;
+        sample = 4'b0010; // w2[7:4] = 6
+        #1000;
+        sample = 4'b0001; // w2[3:0] = 1
+        #1000;
+
+        sample = 4'b1111; // Sin tecla presionada (para evitar cambios en el estado)
+        // Esperar un ciclo extra para ver el resultado de la suma
+        #5000;
+
+
+        $display("Resultado de la suma: %0b", cdu); // Esperado: 534 + 961 = 1495
+        $finish;
     end
 
-    // Monitor output for debugging
     initial begin
-        $monitor("At time %t, sample = %b, cdu = %b", $time, sample, cdu);
+        $dumpfile("sume_tb.vcd");
+        $dumpvars(0, sume_tb);
     end
 
 endmodule
