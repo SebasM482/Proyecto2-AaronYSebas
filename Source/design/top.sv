@@ -28,9 +28,8 @@ module top(
     disp_controller controller (.clk(clk), .a(a));
     mux mux (.a(a), .cdu(cdu), .w(w));
     sume suma (
-    .clk(clk),             
-    .n_reset(n_reset),    
-    .sample(sample),       
+    .clk(clk),              
+    .sample_input(sample),       
     .cdu(cdu)              
 );
     lecture lect (
