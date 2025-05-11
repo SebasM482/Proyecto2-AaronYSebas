@@ -20,45 +20,69 @@ module sume_tb;
         // Inicializar señales
         clk = 0;
         sample = 4'b1111; // Sin tecla presionada inicialmente
-
-        // Esperar un ciclo
         #1000;
 
         // Simular presiones de teclas
         sample = 4'b0001; // w1[11:8] = 5
         #1000;
-        sample = 4'b0010; // w1[7:4] = 3
+        sample = 4'b1111; // w1[11:8] 
         #1000;
-        sample = 4'b0011; // w1[3:0] = 4
+
+        sample = 4'b0001; // w1[7:4] = 3
         #1000;
+        sample = 4'b1111; // w1[11:8] 
+        #1000;
+
+        sample = 4'b0001; // w1[3:0] = 4
+        #1000;
+        sample = 4'b1111; // w1[11:8] 
+        #1000;
+
         sample = 4'b0001; // w2[11:8] = 9
         #1000;
-        sample = 4'b0010; // w2[7:4] = 6
+        sample = 4'b1111; // w1[11:8] 
         #1000;
-        sample = 4'b0011; // w2[3:0] = 1
+
+        sample = 4'b0001; // w2[7:4] = 6
+        #1000;
+        sample = 4'b1111; // w1[11:8] 
+        #1000;
+
+        sample = 4'b0001; // w2[3:0] = 1
+        #1000;
+        sample = 4'b1111; // w1[11:8] 
         #1000;
 
 
-        sample = 4'b1111; // Sin tecla presionada (para evitar cambios en el estado)
-        // Esperar un ciclo extra para ver el resultado de la suma
+        sample = 4'b0000; // Sin tecla presionada (para evitar cambios en el estado)
         #5000;
 
         // Simular presiones de teclas
-        sample = 4'b0011; // w1[11:8] = 5
+        sample = 4'b0010; // w1[11:8] = 5
+        #1000;
+        sample = 4'b1111; // w1[11:8] 
         #1000;
         sample = 4'b0010; // w1[7:4] = 3
         #1000;
-        sample = 4'b0001; // w1[3:0] = 4
+        sample = 4'b1111; // w1[11:8] 
         #1000;
-        sample = 4'b0011; // w2[11:8] = 9
+        sample = 4'b0010; // w1[3:0] = 4
+        #1000;
+        sample = 4'b1111; // w1[11:8] 
+        #1000;
+        sample = 4'b0010; // w2[11:8] = 9
+        #1000;
+        sample = 4'b1111; // w1[11:8] 
         #1000;
         sample = 4'b0010; // w2[7:4] = 6
         #1000;
-        sample = 4'b0001; // w2[3:0] = 1
+        sample = 4'b1111; // w1[11:8] 
         #1000;
+        sample = 4'b0010; // w2[3:0] = 1
+        #1000;
+        sample = 4'b1111; // w1[11:8] 
 
-        sample = 4'b1111; // Sin tecla presionada (para evitar cambios en el estado)
-        // Esperar un ciclo extra para ver el resultado de la suma
+        sample = 4'b0000; // Sin tecla presionada (para evitar cambios en el estado)
         #5000;
 
 

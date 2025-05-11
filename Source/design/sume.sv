@@ -10,21 +10,20 @@ module sume (
 
     // Variables internas
     logic [11:0] w1, w2;
-    logic [3:0] sample_A, sample_B;
+    logic [3:0] sample_A;
     logic flag;
-    assign debug =~state;
+    assign debug = ~state;
 
     // Registro de sample y detección de cambio
     always_ff @(posedge clk) begin
         sample_A <= sample; // 1 ciclo de retardo
-        sample_B <= sample_A; // 2 ciclos de retardo
     end
 
-    assign flag = (sample_A != sample); // Con 2 ciclos no funciona el testbench
+    assign flag = (sample_A != sample); // Comparar el valor actual con el anterior
 
     // Máquina de estados
     always_ff @(posedge clk) begin
-        if (flag) begin
+        if (flag && sample != 4'b1111) begin
             case (state)
                 S0: w1[11:8] <= sample;
                 S1: w1[7:4]  <= sample;

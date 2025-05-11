@@ -5,8 +5,7 @@ module lecture (
     input logic n_reset,
     input logic [3:0] filas_raw,        // Entradas directas desde las filas del teclado
     output logic [3:0] columnas,
-    output logic [3:0] sample,           // Salidas debouneadas
-    output logic [3:0] key_pressed         // Muestreo de filas sin rebote
+    output logic [3:0] sample           // Salidas debouneada
 );
 
     // Salidas del debouncer 
@@ -66,35 +65,28 @@ module lecture (
     always @(posedge clk ) begin
         
         case({columna_presionada_total, filas_db})
-            8'b1000_1000 : key_pressed <= 4'b0001; // columna 0, fila 0 = 1
-            8'b0100_1000 : key_pressed <= 4'b0010; // columna 1, fila 0 = 2
-            8'b0010_1000 : key_pressed <= 4'b0011; // columna 2, fila 0 = 3
-            8'b0001_1000 : key_pressed <= 4'b1010; // columna 3, fila 0 = 10 A
+            8'b1000_1000 : sample <= 4'b0001; // columna 0, fila 0 = 1
+            8'b0100_1000 : sample <= 4'b0010; // columna 1, fila 0 = 2
+            8'b0010_1000 : sample <= 4'b0011; // columna 2, fila 0 = 3
+            8'b0001_1000 : sample <= 4'b1010; // columna 3, fila 0 = 10 A
 
-            8'b1000_0100 : key_pressed <= 4'b0100; // columna 0, fila 1 = 4
-            8'b0100_0100 : key_pressed <= 4'b0101; // columna 1, fila 1 = 5
-            8'b0010_0100 : key_pressed <= 4'b0110; // columna 2, fila 1 = 6
-            8'b0001_0100 : key_pressed <= 4'b1011; // columna 3, fila 1 = 11 B
+            8'b1000_0100 : sample <= 4'b0100; // columna 0, fila 1 = 4
+            8'b0100_0100 : sample <= 4'b0101; // columna 1, fila 1 = 5
+            8'b0010_0100 : sample <= 4'b0110; // columna 2, fila 1 = 6
+            8'b0001_0100 : sample <= 4'b1011; // columna 3, fila 1 = 11 B
 
-            8'b1000_0010 : key_pressed <= 4'b0111; // columna 0, fila 2 = 7
-            8'b0100_0010 : key_pressed <= 4'b1000; // columna 1, fila 2 = 8
-            8'b0010_0010 : key_pressed <= 4'b1001; // columna 2, fila 2 = 9
-            8'b0001_0010 : key_pressed <= 4'b1100; // columna 3, fila 2 = 12 C
+            8'b1000_0010 : sample <= 4'b0111; // columna 0, fila 2 = 7
+            8'b0100_0010 : sample <= 4'b1000; // columna 1, fila 2 = 8
+            8'b0010_0010 : sample <= 4'b1001; // columna 2, fila 2 = 9
+            8'b0001_0010 : sample <= 4'b1100; // columna 3, fila 2 = 12 C
 
-            8'b1000_0001 : key_pressed <= 4'b1101; // columna 0, fila 3 = 13 * D
-            8'b0100_0001 : key_pressed <= 4'b0000; // columna 1, fila 3 = 0
-            8'b0010_0001 : key_pressed <= 4'b1110; // columna 2, fila 3 = # 14 E
+            8'b1000_0001 : sample <= 4'b1101; // columna 0, fila 3 = 13 * D
+            8'b0100_0001 : sample <= 4'b0000; // columna 1, fila 3 = 0
+            8'b0010_0001 : sample <= 4'b1110; // columna 2, fila 3 = # 14 E
             //8'b0001_0001 : key_pressed = 4'b1111; // columna 3, fila 3 = 15 F (Tecla D)
-            default: key_pressed <= 4'b1111; // Si no hay coincidencia, salida por defecto
+            default: sample <= 4'b1111; // Si no hay coincidencia, salida por defecto
         endcase
     end
-
-
-    always @(posedge clk ) begin
-        if (key_pressed !== 4'b1111)
-            sample <= key_pressed;
-    end
-
 
 endmodule
  
