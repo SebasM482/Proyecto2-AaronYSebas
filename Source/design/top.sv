@@ -29,7 +29,7 @@ module top(
     mux mux (.a(a), .cdu(cdu), .w(w));
     sume suma (
     .clk(clk),              
-    .sample_input(sample),       
+    .sample(sample),       
     .cdu(cdu)              
 );
     lecture lect (

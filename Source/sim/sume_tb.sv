@@ -9,7 +9,7 @@ module sume_tb;
     // Instancia del DUT (Device Under Test)
     sume uut (
         .clk(clk),
-        .sample_input(sample),
+        .sample(sample),
         .cdu(cdu)
     );
 

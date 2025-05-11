@@ -61,13 +61,11 @@ module lecture (
     );
 
  
-    logic [7:0] code; // Código de 8 bits para identificar la tecla presionada
     assign columna_presionada_total = columna_presionada0 | columna_presionada1 | columna_presionada2 | columna_presionada3; // Unir las columnas presionadas
-    assign code = {columna_presionada_total, filas_db};
 
     always @(posedge clk ) begin
         
-        case(code)
+        case({columna_presionada_total, filas_db})
             8'b1000_1000 : key_pressed <= 4'b0001; // columna 0, fila 0 = 1
             8'b0100_1000 : key_pressed <= 4'b0010; // columna 1, fila 0 = 2
             8'b0010_1000 : key_pressed <= 4'b0011; // columna 2, fila 0 = 3
@@ -88,7 +86,6 @@ module lecture (
             8'b0010_0001 : key_pressed <= 4'b1110; // columna 2, fila 3 = # 14 E
             //8'b0001_0001 : key_pressed = 4'b1111; // columna 3, fila 3 = 15 F (Tecla D)
             default: key_pressed <= 4'b1111; // Si no hay coincidencia, salida por defecto
-
         endcase
     end
 
