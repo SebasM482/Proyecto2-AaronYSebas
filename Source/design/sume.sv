@@ -1,7 +1,8 @@
 module sume (
     input  logic clk,
     input  logic [3:0] sample,  // Valor del teclado
-    output logic [11:0] cdu           // Resultado de la suma
+    output logic [11:0] cdu,         // Resultado de la suma
+    output logic [3:0] debug
 );
 
     typedef enum logic [2:0] {S0, S1, S2, S3, S4, S5, S6} statetype;
@@ -11,6 +12,7 @@ module sume (
     logic [11:0] w1, w2;
     logic [3:0] sample_A, sample_B;
     logic flag;
+    assign debug =~state;
 
     // Registro de sample y detección de cambio
     always_ff @(posedge clk) begin

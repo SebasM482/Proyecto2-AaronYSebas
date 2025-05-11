@@ -7,30 +7,26 @@ module top(
     output logic [6:0] d,  // Segmentos
     output logic [2:0] a, // Control de los segmentos
     output logic [3:0] columnas, // Salida de la FSM de columnas 
-    output logic [3:0] columna_presionada_total   
+    output logic [3:0] led  
     );      
 
-    logic [3:0] leds;
     logic [3:0] sample; // Salidas debouneadas
     logic [11:0] cdu;
-    assign columna_presionada_total = leds;
-    ////////////////////////////
-    // Entradas
-    reg n_reset;
-    initial begin
-        n_reset <= 1'b1;
-    end
+    logic [3:0] w;
 
+
+    reg n_reset = 1;
 
 
     // Instaciamiento de los modulos
-    disp_dec decoder (.w(cdu), .d(d));
+    disp_dec decoder (.w(w), .d(d));
     disp_controller controller (.clk(clk), .a(a));
     mux mux (.a(a), .cdu(cdu), .w(w));
     sume suma (
     .clk(clk),              
     .sample(sample),       
-    .cdu(cdu)              
+    .cdu(cdu),
+    .debug(led)              
 );
     lecture lect (
         .clk(clk),
@@ -38,7 +34,7 @@ module top(
         .filas_raw(filas_raw),
         .columnas(columnas),
         .sample(sample),
-        .key_pressed(leds) // Esta señal es para de bugear
+        //.key_pressed(leds)
     );
     ////////////////////////////
 
