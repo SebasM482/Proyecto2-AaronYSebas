@@ -4,7 +4,7 @@ module top(
     input logic clk,
     input logic [3:0] filas_raw, // Entradas directas desde las filas del teclado
     output logic [6:0] d,  // Segmentos
-    output logic [4:0] a, // Control de los segmentos
+    output logic [3:0] a, // Control de los segmentos
     output logic [3:0] columnas, // Salida de la FSM de columnas 
     output logic [3:0] led  // Senal de debug
     );      
