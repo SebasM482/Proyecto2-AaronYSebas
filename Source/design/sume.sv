@@ -1,7 +1,7 @@
 module sume (
     input  logic clk,
     input  logic [3:0] sample,  // Valor del teclado
-    output logic [11:0] cdu,         // Resultado de la suma
+    output logic [15:0] cdu,         // Resultado de la suma
     output logic [3:0] debug
 );
 
