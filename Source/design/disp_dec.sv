@@ -1,5 +1,8 @@
 `timescale 1ns/1ns
-module disp_dec(input logic [3:0] w, output logic [6:0] d);
+module disp_dec(
+    input logic [3:0] w, 
+    output logic [6:0] d
+);
     always_comb begin
         case (w)
             4'h0: d <= 7'b1111110;
