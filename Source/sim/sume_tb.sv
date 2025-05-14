@@ -4,13 +4,13 @@ module sume_tb;
 
     logic clk;
     logic [3:0] sample;
-    logic [11:0] cdu;
+    logic [15:0] mcdu;
 
     // Instancia del DUT (Device Under Test)
     sume uut (
         .clk(clk),
         .sample(sample),
-        .cdu(cdu)
+        .cdu(mcdu)
     );
 
     // Reloj: periodo de 10 unidades de tiempo
@@ -23,32 +23,32 @@ module sume_tb;
         #1000;
 
         // Simular presiones de teclas
-        sample = 4'b0001; // w1[11:8] = 5
+        sample = 4'd9; // w1[11:8] = 999
         #1000;
         sample = 4'b1111; // w1[11:8] 
         #1000;
 
-        sample = 4'b0001; // w1[7:4] = 3
+        sample = 4'd9; // w1[7:4] = 3
         #1000;
         sample = 4'b1111; // w1[11:8] 
         #1000;
 
-        sample = 4'b0001; // w1[3:0] = 4
+        sample = 4'd9; // w1[3:0] = 4
         #1000;
         sample = 4'b1111; // w1[11:8] 
         #1000;
 
-        sample = 4'b0001; // w2[11:8] = 9
+        sample = 4'd9; // w2[11:8] = 9
         #1000;
         sample = 4'b1111; // w1[11:8] 
         #1000;
 
-        sample = 4'b0001; // w2[7:4] = 6
+        sample = 4'd9; // w2[7:4] = 6
         #1000;
         sample = 4'b1111; // w1[11:8] 
         #1000;
 
-        sample = 4'b0001; // w2[3:0] = 1
+        sample = 4'd9; // w2[3:0] = 1
         #1000;
         sample = 4'b1111; // w1[11:8] 
         #1000;
@@ -86,7 +86,7 @@ module sume_tb;
         #5000;
 
 
-        $display("Resultado de la suma: %0b", cdu); // Esperado: 534 + 961 = 1495
+        //$display("Resultado de la suma: %0d", cdu); // Esperado: 534 + 961 = 1495
         $finish;
     end
 
