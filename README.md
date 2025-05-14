@@ -18,11 +18,28 @@
 
 #### 2. Encabezado del módulo
 ```SystemVerilog
-module DeBounce(----); // Sindrome
+module DeBounce (
+    input  logic clk,
+    input  logic n_reset,
+    input  logic button_in,
+    input  logic [3:0] columnas,           // columnas del teclado
+    output logic DB_out,                   // salida debounced de 1s
+    output logic [3:0] columna_presionada  // columna registrada
+);
 ```
 #### 3. Parámetros
 ```SystemVerilog
-----
+    parameter N = 6;
+    parameter integer MAX_COUNT = 15_000_000; // 1s @ 27MHz
+
+    // Señales internas
+    reg [N-1:0] q_reg, q_next;
+    reg DFF1, DFF2;
+    wire q_reset = (DFF1 ^ DFF2);
+    wire q_add   = ~q_reg[N-1];
+
+    logic [31:0] counter;
+    logic active;
 ```
 
 
@@ -31,7 +48,7 @@ module DeBounce(----); // Sindrome
 
 
 #### 5. Testbench
------
+En este caso, el test bench se observa por medio del wave view
 
 
 ### **2.2 Módulo `disp_controller`**
@@ -40,7 +57,7 @@ module DeBounce(----); // Sindrome
 
 #### 2. Encabezado del módulo
 ```SystemVerilog
-module mux(
+module disp_controller(
     input logic clk,
     output logic [3:0] a
 );
@@ -48,31 +65,27 @@ module mux(
 ```
 #### 3. Parámetros
 ```SystemVerilog
-    always_ff @(posedge clk) begin
-        if (count == max_count - 1) begin
-            // Cambia el estado de los segmentos en secuencia cíclica
-            case (a)
-                4'b0001: a <= 4'b0010;
-                4'b0010: a <= 4'b0100;
-                4'b0100: a <= 4'b1000;
-                4'b1000: a <= 4'b0001;
-                default: a <= 4'b1000;
-            endcase
-            count <= 0;
-        end 
-        else begin
-            count <= count + 1;
-        end
-    end
+    parameter int frequency = 27_000_000;               // Frecuencia de entrada en Hz
+    parameter int max_count = frequency * 1/1000; // Cuenta máxima del contador
+    logic [24:0] count;  // Contador con tamaño suficiente
 ```
 
 
 #### 4. Criterios de diseño
-![Display Controller](Recursos/DC.png)
+<img src="Recursos/DC.png" alt="DC" width="500">
 
 
 #### 5. Testbench
-
+Time =                    0 ns, 7segOn = 0,0,1
+Time =           1000061000 ns, 7segOn = 0,1,0
+Time =           2000141000 ns, 7segOn = 1,0,0
+Time =           3000221000 ns, 7segOn = 0,0,0
+Time =           4000301000 ns, 7segOn = 0,0,1
+Time =           5000381000 ns, 7segOn = 0,1,0
+Time =           6000461000 ns, 7segOn = 1,0,0
+Time =           7000541000 ns, 7segOn = 0,0,0
+Time =           8000621000 ns, 7segOn = 0,0,1
+Time =           9000701000 ns, 7segOn = 0,1,0
 
 ### **2.3 Módulo `disp_dec`**
 #### 1. Funcionamiento
@@ -88,12 +101,21 @@ module disp_dec(
 ```
 #### 3. Parámetros
 ```SystemVerilog
------
+Number: 0000, Segments: 1111110
+Number: 0001, Segments: 0110000
+Number: 0010, Segments: 1101101
+Number: 0011, Segments: 1111001
+Number: 0100, Segments: 0110011
+Number: 0101, Segments: 1011011
+Number: 0110, Segments: 1011111
+Number: 0111, Segments: 1110000
+Number: 1000, Segments: 1111111
+Number: 1001, Segments: 1111011
 ```
 
 
 #### 4. Criterios de diseño
-![Coder del Display](Recursos/DD.png)
+<img src="Recursos/DD.png" alt="DD" width="500">
 
 
 #### 5. Testbench
@@ -117,16 +139,67 @@ module lecture (
 ```
 #### 3. Parámetros
 ```SystemVerilog
------
+    logic [3:0] columna_presionada0; //4 columna_presionada para un trucazo mistico
+    logic [3:0] columna_presionada1;
+    logic [3:0] columna_presionada2;
+    logic [3:0] columna_presionada3;
+    logic [3:0] columna_presionada_total;
+    logic [3:0] filas_db; // Muestreo de filas sin rebote
+
+
+
+    columnas_fsm fsm (
+        .clk(clk),
+        .columnas(columnas)
+    );
+
+    DeBounce db0 (
+        .clk(clk),
+        .n_reset(n_reset),
+        .button_in(filas_raw[0]),
+        .columnas(columnas),
+        .DB_out(filas_db[0]),
+        .columna_presionada(columna_presionada0)
+    );
+ 
+    DeBounce db1 (
+        .clk(clk),
+        .n_reset(n_reset),
+        .button_in(filas_raw[1]),
+        .columnas(columnas),
+        .DB_out(filas_db[1]),
+        .columna_presionada(columna_presionada1)
+    );
+
+    DeBounce db2 (
+        .clk(clk),
+        .n_reset(n_reset),
+        .button_in(filas_raw[2]),
+        .columnas(columnas),
+        .DB_out(filas_db[2]),
+        .columna_presionada(columna_presionada2)
+    );
+
+    DeBounce db3 (
+        .clk(clk),
+        .n_reset(n_reset),
+        .button_in(filas_raw[3]),
+        .columnas(columnas),
+        .DB_out(filas_db[3]),
+        .columna_presionada(columna_presionada3)
+    );
+
+ 
+    assign columna_presionada_total = columna_presionada0 | columna_presionada1 | columna_presionada2 | columna_presionada3; // Unir las columnas presionadas
 ```
 
 
 #### 4. Criterios de diseño
-![Lecture](Recursos/LE.png)
+<img src="Recursos/LE.png" alt="LE" width="500">
 
 
 #### 5. Testbench
-
+Para este modulo, el test bench tiene sus datos depositados en un archivo vcd
 
 ### **2.5 Módulo `mux`**
 
@@ -156,7 +229,13 @@ module mux(
 
 
 #### 5. Testbench
------
+Tiempo |   a   |    cdu    |  w
+-------------------------------
+  10ns | 001 | 011100110001 | 0001
+  20ns | 010 | 011100110001 | 0011
+  30ns | 100 | 011100110001 | 0111
+  40ns | 000 | 011100110001 | 0000
+
 
 
 
@@ -167,11 +246,22 @@ module mux(
 
 #### 2. Encabezado del módulo
 ```SystemVerilog
-module mux(----); // Sindrome
+module sume (
+    input  logic clk,
+    input  logic [3:0] sample,  // Valor del teclado
+    output logic [15:0] cdu,         // Resultado de la suma
+    output logic [3:0] debug
+);
 ```
 #### 3. Parámetros
 ```SystemVerilog
-----
+    typedef enum logic [2:0] {S0, S1, S2, S3, S4, S5, S6} statetype;
+    statetype state=S0;  // Iniciar directamente en S0
+    // Variables internas
+    logic [11:0] w1, w2;
+    logic [3:0] sample_A;
+    logic flag;
+    assign debug = ~state;
 ```
 
 
@@ -227,21 +317,7 @@ module top(
 
 ## 4. Problemas encontrados durante el proyecto
 Durante la realización del proyecto se encontraron varios problemas:
-1.  Poca familiaridad con el lenguaje de Verilog y su sintaxis
-- R/ Uso de recursos en línea como videos tutoriales, paginas web, datasheets y manuales de la FPGA. 
-
-2. Falta de disponibilidad de ambos estudiantes para lograr reunirse
-- R/ Mas coordinación y comunicación además de lograr subir el nivel de prioridad del proyecto. 
-
-3.  Poca familiaridad con el dispositivo Tang Nano 9k
-- R/ Uso de tanto manuales como tutoriales para lograr entender su funcionamiento adecuado. 
-
-4.  Incapacidad de las instrucciones del proyecto para presentar ciertas ideas o direcciones
-- R/ Aclaración de estas dudas tanto con el profesor como el asistente del curso para lograr implementar todas las ideas. 
-
-5.  Fallos desconocidos tanto en la parte física como en la implementación del código.
-- R/ Realizar troubleshooting en la parte de programación por medio de los test benchs como en la parte física por medio de herramientas de laboratorio. 
-
+1.  
 
 
 ### 5. Resultados y Análisis
