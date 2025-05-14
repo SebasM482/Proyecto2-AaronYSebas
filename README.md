@@ -317,8 +317,10 @@ module top(
 
 ## 4. Problemas encontrados durante el proyecto
 Durante la realización del proyecto se encontraron varios problemas:
-1.  
-
+1.  Diseño y logica de como armar y organizar el proceso de la información.
+2.  Tratar de codificar correctamente cada uno de los modulos.
+3.  La implementacion correcta de la funcion del codigo con respecto al circuito y la FPGA en si
+4.  Debugeo del circuito y el codigo. 
 
 ### 5. Resultados y Análisis
 - Obtención de formas de onda con el osciloscopio.
