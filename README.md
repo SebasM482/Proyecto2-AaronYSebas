@@ -6,13 +6,27 @@
 - **Flip Flop**: Circuitos que permite almancenar un valor binario
 - **Debounce**: Un debounce (o antirrebote) es una técnica usada en electrónica digital para eliminar señales erróneas causadas por el rebote mecánico de botones o interruptores.
 
-## 2. Descripción general del sistema
+## 2. Descripcion general del problema
+<div style="text-align: justify"> El problema general es tratar de conectar todos los modulos por medio de las maquinas de estado, de manera que cada modulo pueda funcionar de manera asincronica como por cualquier otro tipo de condicion. Por lo que la logica tiene que ser pensada con antelacion, ademas de siempre estar atento a todo lo que se esta trabajando.</div>
+
+<div style="text-align: justify"> 
+1. Se logro la creacion e implementacion del diseño digital para el correcto funcionamiento con la FPGA.
+2. Se logro la implementacion de diferentes testbench para cada modulo.
+3. Se logro la compresion del uso de maquinas sincronicas y asincronicos. 
+4. Se logro recibir cada uno de los datos del teclado hexadecimal, de manera que cada uno de los datos pueda ser usado para la suma.
+5. Se logro realizar el modulo de suma
+6. Se logro realizar el despligue de los datos en el display de 7 segmentos. 
+7. Se uso git correctamente.
+8. Se logro planificar el proyecto correctamente.
+ </div>
+
+## 3. Descripción general del sistema
 <img src="Recursos/ALL.png" alt="Diagrama Completo" width="700">
 
 <div style="text-align: justify"> Este circuito de manera general se encarga de recibir 2 numeros por medio de un teclado hexadecimal, los cuales son almacenados de manera interna por medio de flip flops, los cuales se encuentran controlados por una maquina de estados. Los numeros pasan por un debouncer, el cual permite limpiar toda la señal de entrada de manera que solo se reciba el numero. Una vez que la señal se filtro, se lleva directamente al modulo de la maquina de estados que suma. La maquina de estados se encarga de que al recibir la señal de una tecla presionada, este valor sea guardado en un los digitos de cada uno de los numeros a sumar, la primera tecla son las centenas, la segunda las decenas y la ultima llena las unidades. Una vez que se tienen los 2 numeros, estos se suman, la suma tambien es guardada por medio de un flip flop en la maquina de estados. Por ultimo, este numero se despligueda por medio de un mux que le indica a cada display que despleguar y un display decoder, que transfiere el numero a su respectivo codigo en 7 segment display. </div>
  
 
-### **2.1 Módulo `DeBounce`**
+### **3.1 Módulo `DeBounce`**
 #### 1. Funcionamiento
 <div style="text-align: justify"> El codificador de Hamming se encarga de recibir el mensaje codificado enviado desde los Dip Switches y lograr realizar una decodificación de Hamming al obtener los síndromes necesarios para lograr posicionar el error presente en este. Para esto se realiza la decodificación con los bits de paridad y se asignan a p[2:0] dejando el cuarto bit siempre en 0. Por último, este mismo modulo se encarga de lanzar los valores del número correcto hacia las leds de la FPGA, permitiendo desplegar el numero correcto ahi. </div>
 
@@ -51,7 +65,7 @@ module DeBounce (
 En este caso, el test bench se observa por medio del wave view
 
 
-### **2.2 Módulo `disp_controller`**
+### **3.2 Módulo `disp_controller`**
 #### 1. Funcionamiento
 <div style="text-align: justify"> El módulo disp_controller se encarga de dividir la frecuencia ademas de enlazar esto con un One Hot, el cual sera transmitido hacia el mux para poder decirle a cada display cual de los valores representar y ademas cuando tienen que activarse. Esto seria la variable "a". </div>
 
@@ -87,7 +101,7 @@ Time =           7000541000 ns, 7segOn = 0,0,0
 Time =           8000621000 ns, 7segOn = 0,0,1
 Time =           9000701000 ns, 7segOn = 0,1,0
 
-### **2.3 Módulo `disp_dec`**
+### **3.3 Módulo `disp_dec`**
 #### 1. Funcionamiento
 <div style="text-align: justify">El display decoder se encarga de recibir la señal del modulo sume, el cual basicamente da el resultado de la suma de los 2 digitos. Por medio de la variable cdu, el cual es un numero de 4 digitos (16 bits) se dividen los digitos por medio del mux, dando como resultado w. Esta variable es trabajada como un hot one, que activa uno de los digitos especificamente, el cual se ve reflejado por el d.</div>
 
@@ -122,7 +136,7 @@ Number: 1001, Segments: 1111011
 ----
 
 
-### **2.4 Módulo `lecture`**
+### **3.4 Módulo `lecture`**
 #### 1. Funcionamiento
 <div style="text-align: justify">Este modulo se encarga de recibir los inputs directamente del circuito, estas siendo los variables llamadas raw. Una vez que se reciben estas señales estas son inicializadas por medio de 4 instancias del DeBounce, el cual logra filtrar por completo la señal, dando como resultado solamente el valor de la señal del numero presionado. Una vez que esto pasa, la salida se pasa por un tipo de decoder, retornando por medio de sample, el numero presionado.</div>
 
@@ -201,7 +215,7 @@ module lecture (
 #### 5. Testbench
 Para este modulo, el test bench tiene sus datos depositados en un archivo vcd
 
-### **2.5 Módulo `mux`**
+### **3.5 Módulo `mux`**
 
 #### 1. Funcionamiento
 <div style="text-align: justify">El mux especificamente se encarga de recibir el uno de los valores del One Hot (a), para de esta manera, mandar la señal correcta del display. Esto se envia por medio de la variable w, la cual extrae el digito correcto del numero de cdu. </div>
@@ -229,18 +243,13 @@ module mux(
 
 
 #### 5. Testbench
-Tiempo |   a   |    cdu    |  w
--------------------------------
-  10ns | 001 | 011100110001 | 0001
-  20ns | 010 | 011100110001 | 0011
-  30ns | 100 | 011100110001 | 0111
-  40ns | 000 | 011100110001 | 0000
 
 
 
 
 
-### **2.6 Módulo `sume`**
+
+### **3.6 Módulo `sume`**
 #### 1. Funcionamiento
 <div style="text-align: justify">.</div>
 
@@ -266,13 +275,13 @@ module sume (
 
 
 #### 4. Criterios de diseño
-<img src="Recursos/SUME.png" alt="DB" width="500">
+<img src="Recursos/FSM.png" alt="FSM" width="500">
 
 
 #### 5. Testbench
 -----
 
-### **2.7 Módulo `top`**
+### **3.7 Módulo `top`**
 #### 1. Funcionamiento
 <div style="text-align: justify">Este modulo se encarga de conectar el resto, por medio de las variables iniciales que son usadas en el primer modulo, ademas de los outputs que se tienen que sacar en al final. Ademas, en este modulo se instancia el resto, designando cuales variables reciben, las conexiones de los cables y definir las salidas. </div>
 
