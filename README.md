@@ -279,7 +279,7 @@ module sume (
 
 
 #### 5. Testbench
------
+Para este modulo se usa el WV
 
 ### **3.7 Módulo `top`**
 #### 1. Funcionamiento
@@ -325,15 +325,26 @@ module top(
 
 
 ## 4. Problemas encontrados durante el proyecto
-Durante la realización del proyecto se encontraron varios problemas:
-1.  Diseño y logica de como armar y organizar el proceso de la información.
+<div style="text-align: justify"> Durante la realización del proyecto se encontraron varios problemas:
+1.  Diseño y logica de como armar y organizar el proceso de la información
+Solucion:Uso de recursos en linea para lograr encontrar informacion.
 2.  Tratar de codificar correctamente cada uno de los modulos.
+Solucion: De la misma manera, el buscar recurso en linea acerca del lenguaje en si
 3.  La implementacion correcta de la funcion del codigo con respecto al circuito y la FPGA en si
+Solucion: Planeamiento adecuado y comunicacion efectiva.
 4.  Debugeo del circuito y el codigo.
+Solucion: Prueba y error. </div>
 
+## 5. Ejemplo
 
+<div style="text-align: justify"> Para iniciarlizar la maquina, primero se tiene que presionar un boton, una vez que se recibe el input, este es filtrado por medio del DeBounce. Una vez que el DeBounce logra filtrar la tecla, este se envia a al lecture para poder reconocer cual de las teclas fue presionada. Una vez que esto se recibe, el siguiente paso es mandarlo al sume. Este segun el estado en el que se encuentra, un valor de w1 o w2 es reemplazado, en este caso, por w1[11:8]. Este valor se guarda en un flip flop. Una vez que los numeros se llenan, simplemente al recibir una tecla se realiza una suma. </div>
+
+## 6. Analisis de Potencia
+![Recursos](RE.png)
 ## Apendices:
 
 
 ## 1. Referencias
 [0] OpenAI. (2025). ChatGPT conversation about debounce. Retrieved from [https://chatgpt.com/c/68237c47-c858-8005-937f-59e6cbdb20d2]
+
+[1] S. Gowrishankar, "Verilog FSM - Finite State Machine," ChipVerify, [en línea]. Disponible en: https://www.chipverify.com/verilog/verilog-fsm. [Accedido: 16-may-2025].
