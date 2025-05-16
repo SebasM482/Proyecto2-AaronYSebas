@@ -341,6 +341,7 @@ Solucion: Prueba y error. </div>
 
 ## 6. Analisis de Potencia
 ![Recursos](RE.png)
+
 ## Apendices:
 
 
@@ -348,3 +349,9 @@ Solucion: Prueba y error. </div>
 [0] OpenAI. (2025). ChatGPT conversation about debounce. Retrieved from [https://chatgpt.com/c/68237c47-c858-8005-937f-59e6cbdb20d2]
 
 [1] S. Gowrishankar, "Verilog FSM - Finite State Machine," ChipVerify, [en línea]. Disponible en: https://www.chipverify.com/verilog/verilog-fsm. [Accedido: 16-may-2025].
+
+[2] FPGA4Student, "Simple Debouncing Verilog Code for Buttons on FPGA," FPGA4Student.com, 2017. [Online]. Available: https://www.fpga4student.com/2017/04/simple-debouncing-verilog-code-for.html. [Accessed: May 15, 2025].
+
+[3] DigiKey TechForum, "Debounce Logic Circuit (Verilog)," DigiKey TechForum, Mar. 30, 2021. [Online]. Available: https://forum.digikey.com/t/debounce-logic-circuit-verilog/13196. [Accessed: May 15, 2025].
+
+[4] D. Gisselquist, "How to eliminate button bounces with digital logic," ZipCPU, Aug. 4, 2017. [Online]. Available: https://zipcpu.com/blog/2017/08/04/debouncing.html. [Accessed: May 15, 2025].
