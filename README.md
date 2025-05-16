@@ -340,8 +340,6 @@ Solucion: Prueba y error. </div>
 <img src="Recursos/RE.png" alt="Recursos" width="500">
 
 ## Apendices:
-
-
 ## 1. Referencias
 [0] OpenAI. (2025). ChatGPT conversation about debounce. Retrieved from [https://chatgpt.com/c/68237c47-c858-8005-937f-59e6cbdb20d2]
 
