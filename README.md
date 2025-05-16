@@ -320,9 +320,6 @@ module top(
 ```
 
 
-#### 4. Criterios de diseño
-<img src="Recursos/TP.png" alt="TOP" width="500">
-
 
 ## 4. Problemas encontrados durante el proyecto
 <div style="text-align: justify"> Durante la realización del proyecto se encontraron varios problemas:
@@ -340,7 +337,7 @@ Solucion: Prueba y error. </div>
 <div style="text-align: justify"> Para iniciarlizar la maquina, primero se tiene que presionar un boton, una vez que se recibe el input, este es filtrado por medio del DeBounce. Una vez que el DeBounce logra filtrar la tecla, este se envia a al lecture para poder reconocer cual de las teclas fue presionada. Una vez que esto se recibe, el siguiente paso es mandarlo al sume. Este segun el estado en el que se encuentra, un valor de w1 o w2 es reemplazado, en este caso, por w1[11:8]. Este valor se guarda en un flip flop. Una vez que los numeros se llenan, simplemente al recibir una tecla se realiza una suma. </div>
 
 ## 6. Analisis de Potencia
-![Recursos](RE.png)
+<img src="Recursos/RE.png" alt="Recursos" width="500">
 
 ## Apendices:
 
